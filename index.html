@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>施工阶段看板</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="page-header">
+    <h1>施工阶段看板</h1>
+    <div class="toolbar">
+      <span id="weekLabel" class="week-label"></span>
+      <button id="newWeekBtn" class="btn">新建本周</button>
+      <button id="deleteWeekBtn" class="btn btn-danger">删除本周</button>
+      <button id="exportBtn" class="btn">导出数据</button>
+      <label class="btn">
+        导入数据
+        <input type="file" id="importInput" accept="application/json" hidden />
+      </label>
+    </div>
+  </header>
+
+  <main id="board" class="board"></main>
+
+  <footer class="timeline-wrap">
+    <h2>历史快照</h2>
+    <div id="timeline" class="timeline"></div>
+  </footer>
+
+  <!-- 新建/编辑卡片对话框 -->
+  <dialog id="cardDialog">
+    <form id="cardForm" method="dialog">
+      <h3 id="dialogTitle">新建项目卡片</h3>
+
+      <label>项目名称
+        <input type="text" id="fieldName" required />
+      </label>
+
+      <label>本周摘要
+        <textarea id="fieldSummary" rows="3" placeholder="一句话描述本周进展"></textarea>
+      </label>
+
+      <label>项目链接（可选）
+        <input type="url" id="fieldLink" placeholder="https://..." />
+      </label>
+
+      <label>所属阶段
+        <select id="fieldStage"></select>
+      </label>
+
+      <label>照片
+        <input type="file" id="fieldPhotos" accept="image/*" multiple />
+      </label>
+      <div id="photoPreview" class="photo-preview"></div>
+
+      <div class="dialog-actions">
+        <button type="button" id="deleteCardBtn" class="btn btn-danger" hidden>删除卡片</button>
+        <button type="button" id="cancelBtn" class="btn">取消</button>
+        <button type="submit" id="saveCardBtn" class="btn btn-primary">保存</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- 照片大图预览 -->
+  <dialog id="photoDialog" class="photo-dialog">
+    <img id="photoDialogImg" src="" alt="照片预览" />
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>

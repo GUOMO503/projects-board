@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:developer.buildertrend.net)",
+      "WebSearch",
+      "WebFetch(domain:supergood.ai)",
+      "Bash(curl -sL https://developer.buildertrend.net)",
+      "Bash(curl -sIL https://developer.buildertrend.net)",
+      "Bash(curl -s -A \"Mozilla/5.0\" https://developer.buildertrend.net)",
+      "Bash(node \"C:\\\\Users\\\\admin\\\\AppData\\\\Roaming\\\\Claude\\\\local-agent-mode-sessions\\\\skills-plugin\\\\ec9fc7b0-b2a7-490e-8efc-b6c2f363f209\\\\9d165362-3ade-4366-807b-2a987ae4f316\\\\skills\\\\web-access\\\\scripts\\\\check-deps.mjs\")",
+      "PowerShell(node \"C:\\\\Users\\\\admin\\\\AppData\\\\Roaming\\\\Claude\\\\local-agent-mode-sessions\\\\skills-plugin\\\\ec9fc7b0-b2a7-490e-8efc-b6c2f363f209\\\\9d165362-3ade-4366-807b-2a987ae4f316\\\\skills\\\\web-access\\\\scripts\\\\check-deps.mjs\")"
+    ]
+  }
+}
