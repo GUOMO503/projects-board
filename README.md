@@ -6,29 +6,23 @@
 - `index.html` — 页面结构
 - `styles.css` — 样式
 - `app.js` — 前端逻辑：10 个施工阶段、周快照管理、卡片增删改、拖拽排序/换阶段、照片上传、导出/导入
-- `server.js` — 极简服务器（仅用 Node 内置模块，无需 `npm install`），提供静态文件 + 数据接口
-- `board-data.json` — 所有看板数据存储在这里（服务器端单一数据源）
 
 ## 运行
+直接用任意静态服务器打开 `index.html` 即可，例如：
 ```bash
-node server.js
+npx serve .
 ```
-然后浏览器打开 `http://localhost:5173`。
 
 ### 数据如何共享
-- 前端不再使用 localStorage，所有读写都通过 `server.js` 提供的接口操作 `board-data.json`：
-  - `GET /api/data` 读取当前数据
-  - `POST /api/data` 覆盖保存数据
+- 数据存储在 Firebase Realtime Database（`app.js` 顶部 `FIREBASE_URL`），所有读写直接通过 REST API 操作：
+  - `GET  {FIREBASE_URL}/board.json` 读取当前数据
+  - `PUT  {FIREBASE_URL}/board.json` 覆盖保存数据
 - 页面每 4 秒自动轮询一次数据，**任何人编辑后，其他打开页面的人几秒内会自动看到更新**（编辑对话框打开时暂停刷新，避免打断输入）
 
-## 让其他人也能打开
-- **同一局域网**：在运行 `node server.js` 的电脑上查看本机局域网 IP（如 `192.168.1.5`），其他设备访问 `http://192.168.1.5:5173` 即可
-- **公网访问（带后端，推荐）**：把整个文件夹部署到一台云服务器/VPS，或 Render、Railway 等支持长期运行 Node 进程的平台，运行 `node server.js`（注意这类平台的文件系统可能不持久，重启会清空 `board-data.json`，如需长期保存建议挂载持久卷或定期导出备份）
-- **纯静态托管（GitHub Pages / Netlify 等，没有后端）**：
-  - 页面会自动检测 `/api/data` 是否可用；不可用时会退回读取部署包里的 `board-data.json`，作为只读快照展示
-  - 也就是说：所有人打开看到的是**你最后一次"导出数据"并提交进部署包的那份 `board-data.json`**
-  - 大家仍可以在页面上拖拽、新建、编辑卡片，但顶部会提示"未连接到服务器，所做修改不会保存"——**刷新页面后这些改动会消失**，不会同步给其他人
-  - 适合"只是想给别人看一下当前进度快照"的场景；如果需要大家协作编辑并互相看到，请用上面带后端的方式
+## 部署
+项目是纯静态站点，可直接部署到 **GitHub Pages**：仓库 Settings → Pages → 选择分支和根目录即可。所有访客共享同一个 Firebase 数据库，无需任何服务器。
+
+> 注意：Firebase 安全规则需要设置为允许公开读写（见下方"注意事项"），否则保存会失败。
 
 ## 使用方法
 
@@ -48,5 +42,14 @@ node server.js
 - 「导入数据」会用所选 JSON 文件**覆盖服务器上的全部数据**（会先弹窗确认），所有人下次轮询都会看到导入后的数据
 
 ## 注意事项
-- 照片以 base64 形式内嵌存储在 `board-data.json` 中，单张照片建议控制在 1-2MB 以内，避免文件过大
+- 照片以 base64 形式内嵌存储在数据中，单张照片建议控制在 1-2MB 以内，避免超出 Firebase 免费额度
 - 多人同时编辑采用「最后保存覆盖」策略，没有冲突合并机制——适合小团队顺序协作，不适合高频并发编辑
+- Firebase Realtime Database 规则需设置为公开读写（任何拿到网址的人都可修改数据），如需鉴权可后续接入 Firebase Auth：
+  ```json
+  {
+    "rules": {
+      ".read": true,
+      ".write": true
+    }
+  }
+  ```

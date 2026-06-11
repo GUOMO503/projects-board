@@ -98,38 +98,34 @@ function getISOWeekKey(date) {
   return `${d.getUTCFullYear()}-W${String(week).padStart(2, '0')}`;
 }
 
-// serverAvailable: 是否能连接到 server.js 提供的 /api/data 接口
-// - true  : 正常读写，多人实时共享
-// - false : 纯静态托管场景，只能读到部署时打包的 board-data.json 快照，
-//           本地仍可拖拽/编辑，但保存会静默失败、刷新后丢失
+// 数据存储在 Firebase Realtime Database，所有人共享同一份数据
+const FIREBASE_URL = 'https://projects-board-28ac0-default-rtdb.firebaseio.com';
+const DATA_URL = `${FIREBASE_URL}/board.json`;
+
 let serverAvailable = true;
 
 async function loadData() {
   try {
-    const res = await fetch('/api/data');
+    const res = await fetch(DATA_URL);
     if (!res.ok) throw new Error('加载失败');
     serverAvailable = true;
-    return await res.json();
-  } catch {
+    const data = await res.json();
+    return data || {};
+  } catch (err) {
     serverAvailable = false;
-    // 退回读取静态打包的数据文件作为只读快照
-    try {
-      const res = await fetch('board-data.json');
-      if (!res.ok) throw new Error('快照不存在');
-      return await res.json();
-    } catch {
-      return {};
-    }
+    console.error('加载失败:', err);
+    return {};
   }
 }
 
-let saveInFlight = null;
 function saveData() {
-  if (!serverAvailable) return;
-  saveInFlight = fetch('/api/data', {
-    method: 'POST',
+  fetch(DATA_URL, {
+    method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(allData),
+  }).then((res) => {
+    if (!res.ok) throw new Error('保存失败');
+    serverAvailable = true;
   }).catch((err) => {
     serverAvailable = false;
     console.error('保存失败:', err);
