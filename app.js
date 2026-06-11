@@ -106,7 +106,7 @@ let serverAvailable = true;
 
 async function loadData() {
   try {
-    const res = await fetch(DATA_URL);
+    const res = await fetch(DATA_URL, { cache: 'no-store' });
     if (!res.ok) throw new Error('加载失败');
     serverAvailable = true;
     const data = await res.json();
