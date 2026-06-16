@@ -319,7 +319,9 @@ function renderTimeline() {
 }
 
 weekSelect.addEventListener('change', () => {
-  currentWeek = weekSelect.value || null;
+  const selected = weekSelect.value;
+  console.log('[dropdown change] value:', selected, '| allData keys:', Object.keys(allData), '| projects:', (allData[selected] || []).length);
+  currentWeek = selected || null;
   renderBoard();
   renderTimeline();
 });
