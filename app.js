@@ -105,6 +105,7 @@ const DATA_URL = `${FIREBASE_URL}/board.json`;
 
 let serverAvailable = true;
 let lastSaveTime = 0;
+let saveInFlight = false;
 
 async function loadData() {
   try {
@@ -120,20 +121,25 @@ async function loadData() {
   }
 }
 
-function saveData() {
+async function saveData() {
   lastSaveTime = Date.now();
-  fetch(DATA_URL, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(allData),
-  }).then((res) => {
+  saveInFlight = true;
+  try {
+    const res = await fetch(DATA_URL, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(allData),
+    });
     if (!res.ok) throw new Error('保存失败');
     serverAvailable = true;
-  }).catch((err) => {
+  } catch (err) {
     serverAvailable = false;
     console.error('保存失败:', err);
-    renderWeekLabel();
-  });
+    renderWeekSelect();
+  } finally {
+    saveInFlight = false;
+    lastSaveTime = Date.now(); // 从写入完成时开始计保护窗口
+  }
 }
 
 function uid() {
@@ -602,10 +608,13 @@ function startPolling() {
     if (!serverAvailable) return;
     if (document.hidden) return;
     if (cardDialog.open || photoDialog.open) return;
-    if (Date.now() - lastSaveTime < 8000) return;
+    if (saveInFlight) return;
+    if (Date.now() - lastSaveTime < 10000) return;
     const fresh = await loadData();
     if (!serverAvailable) return;
     if (!dataChanged(fresh)) return;
+    // 拒绝用周数更少的数据覆盖当前状态（防止拉到写入前的旧快照）
+    if (Object.keys(fresh).length < Object.keys(allData).length) return;
     allData = fresh;
     if (!currentWeek || !allData[currentWeek]) {
       currentWeek = pickCurrentWeek();
