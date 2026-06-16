@@ -572,7 +572,7 @@ importInput.addEventListener('change', () => {
 
 /* ---------- 多人实时同步 ---------- */
 
-const POLL_INTERVAL = 4000;
+const POLL_INTERVAL = 15000;
 
 function pickCurrentWeek() {
   const weeks = Object.keys(allData).sort();
@@ -580,14 +580,29 @@ function pickCurrentWeek() {
   return allData[thisWeek] ? thisWeek : (weeks[weeks.length - 1] || null);
 }
 
+function dataChanged(fresh) {
+  const freshWeeks = Object.keys(fresh).sort().join(',');
+  const localWeeks = Object.keys(allData).sort().join(',');
+  if (freshWeeks !== localWeeks) return true;
+  for (const w of Object.keys(fresh)) {
+    const fa = fresh[w] || [];
+    const la = allData[w] || [];
+    if (fa.length !== la.length) return true;
+    for (let i = 0; i < fa.length; i++) {
+      if (fa[i].id !== la[i].id || fa[i].stageId !== la[i].stageId) return true;
+    }
+  }
+  return false;
+}
+
 function startPolling() {
   setInterval(async () => {
-    if (!serverAvailable) return; // 纯静态托管：没有后端可轮询，保留本地内存中的编辑
-    // 弹窗打开时（正在编辑）暂不刷新，避免打断输入
+    if (!serverAvailable) return;
+    if (document.hidden) return;
     if (cardDialog.open || photoDialog.open) return;
     const fresh = await loadData();
-    if (!serverAvailable) return; // 轮询途中服务器变得不可用，放弃这次结果
-    if (JSON.stringify(fresh) === JSON.stringify(allData)) return;
+    if (!serverAvailable) return;
+    if (!dataChanged(fresh)) return;
     allData = fresh;
     if (!currentWeek || !allData[currentWeek]) {
       currentWeek = pickCurrentWeek();
