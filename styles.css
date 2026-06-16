@@ -55,10 +55,27 @@ body {
   flex-wrap: wrap;
 }
 
-.week-label {
+.week-select {
+  font-family: inherit;
+  font-size: 14px;
   font-weight: 700;
-  font-size: 15px;
-  margin-right: 6px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #fff;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  cursor: pointer;
+  min-width: 160px;
+}
+.week-select option {
+  color: var(--text);
+  background: #fff;
+}
+
+.server-status {
+  font-size: 12px;
+  color: #ffd580;
+  font-weight: 600;
 }
 
 .btn {

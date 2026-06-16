@@ -63,7 +63,8 @@ const STAGES = [
 
 const board = document.getElementById('board');
 const timeline = document.getElementById('timeline');
-const weekLabel = document.getElementById('weekLabel');
+const weekSelect = document.getElementById('weekSelect');
+const serverStatus = document.getElementById('serverStatus');
 const newWeekBtn = document.getElementById('newWeekBtn');
 const deleteWeekBtn = document.getElementById('deleteWeekBtn');
 const exportBtn = document.getElementById('exportBtn');
@@ -146,20 +147,21 @@ function escapeHtml(str) {
 /* ---------- 渲染 ---------- */
 
 function renderAll() {
-  renderWeekLabel();
+  renderWeekSelect();
   renderBoard();
   renderTimeline();
 }
 
-function renderWeekLabel() {
+function renderWeekSelect() {
   const thisWeek = getISOWeekKey(new Date());
-  const weekText = currentWeek
-    ? `当前查看：${currentWeek}${currentWeek === thisWeek ? '（本周）' : ''}`
-    : '暂无数据，请点击“新建本周”';
-  weekLabel.textContent = serverAvailable
-    ? weekText
-    : `${weekText} ｜ 未连接到服务器，当前为只读快照，所做修改不会保存`;
+  const weeks = Object.keys(allData).sort();
+  weekSelect.innerHTML = weeks.length
+    ? weeks.map((w) => `<option value=”${w}”>${w}${w === thisWeek ? '（本周）' : ''}</option>`).join('')
+    : '<option value=””>暂无数据，请点击”新建本周”</option>';
+  if (currentWeek) weekSelect.value = currentWeek;
+  weekSelect.disabled = weeks.length === 0;
   deleteWeekBtn.disabled = !currentWeek;
+  serverStatus.textContent = serverAvailable ? '' : '⚠ 未连接，修改不会保存';
 }
 
 function renderBoard() {
@@ -300,11 +302,19 @@ function renderTimeline() {
     if (week === currentWeek) item.classList.add('active');
     item.addEventListener('click', () => {
       currentWeek = week;
-      renderAll();
+      weekSelect.value = week;
+      renderBoard();
+      renderTimeline();
     });
     timeline.appendChild(item);
   }
 }
+
+weekSelect.addEventListener('change', () => {
+  currentWeek = weekSelect.value || null;
+  renderBoard();
+  renderTimeline();
+});
 
 /* ---------- 拖拽 ---------- */
 
@@ -523,11 +533,13 @@ deleteWeekBtn.addEventListener('click', () => {
 /* ---------- 导出/导入 ---------- */
 
 exportBtn.addEventListener('click', () => {
-  const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
+  if (!currentWeek) return alert('请先选择一个周快照');
+  const payload = { [currentWeek]: allData[currentWeek] };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `stage-board-${getISOWeekKey(new Date())}.json`;
+  a.download = `stage-board-${currentWeek}.json`;
   a.click();
   URL.revokeObjectURL(url);
 });
@@ -540,14 +552,17 @@ importInput.addEventListener('change', () => {
     try {
       const imported = JSON.parse(reader.result);
       if (typeof imported !== 'object' || imported === null) throw new Error('格式错误');
-      if (!confirm('导入将覆盖当前所有本地数据，确定继续吗？')) return;
-      allData = imported;
+      const weeks = Object.keys(imported);
+      if (weeks.length === 0) throw new Error('文件中没有周数据');
+      // 将文件中的每一周合并进当前数据（覆盖同名周）
+      const weekList = weeks.join('、');
+      if (!confirm(`导入将覆盖以下周的数据：${weekList}，确定继续吗？`)) return;
+      Object.assign(allData, imported);
       saveData();
-      const weeks = Object.keys(allData).sort();
-      currentWeek = weeks[weeks.length - 1] || null;
+      currentWeek = weeks[weeks.length - 1];
       renderAll();
     } catch (err) {
-      alert('导入失败：文件不是有效的 JSON');
+      alert('导入失败：' + err.message);
     } finally {
       importInput.value = '';
     }
