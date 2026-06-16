@@ -49,7 +49,7 @@ const STAGES = [
   },
   {
     id: 9, title: '外立面施工 Exterior Cladding', icon: '🏡',
-    bullets: ['Vinyl Siding 挂板', 'Fiber Cement 纤维水泥板', 'Brick 砖', 'Stone Veneer 文化石'],
+    bullets: ['挂板 Vinyl Siding', '纤维水泥板 Fiber Cement', '砖 Brick', '文化石 Stone Veneer'],
     desc: '安装外墙装饰材料，提升美观性和耐久性。Install exterior cladding materials for aesthetics and durability.',
     bg: '#edf3ed', accent: '#7a9b76',
   },
