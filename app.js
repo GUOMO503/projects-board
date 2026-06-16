@@ -418,22 +418,34 @@ function renderPhotoPreview() {
   });
 }
 
-fieldPhotos.addEventListener('change', () => {
-  const files = [...fieldPhotos.files];
-  let remaining = files.length;
-  if (remaining === 0) return;
-  files.forEach((file) => {
+function compressImage(file, maxPx = 1200, quality = 0.75) {
+  return new Promise((resolve) => {
     const reader = new FileReader();
-    reader.onload = () => {
-      pendingPhotos.push(reader.result);
-      remaining -= 1;
-      if (remaining === 0) {
-        renderPhotoPreview();
-        fieldPhotos.value = '';
-      }
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(1, maxPx / Math.max(img.width, img.height));
+        const w = Math.round(img.width * scale);
+        const h = Math.round(img.height * scale);
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.src = e.target.result;
     };
     reader.readAsDataURL(file);
   });
+}
+
+fieldPhotos.addEventListener('change', async () => {
+  const files = [...fieldPhotos.files];
+  if (files.length === 0) return;
+  const compressed = await Promise.all(files.map((f) => compressImage(f)));
+  pendingPhotos.push(...compressed);
+  renderPhotoPreview();
+  fieldPhotos.value = '';
 });
 
 cancelBtn.addEventListener('click', () => cardDialog.close());
@@ -490,8 +502,8 @@ newWeekBtn.addEventListener('click', () => {
     const weeks = Object.keys(allData).sort();
     const lastWeek = weeks[weeks.length - 1];
     const base = lastWeek ? allData[lastWeek] : [];
-    // 深拷贝上一周数据作为本周起点，方便在此基础上调整阶段
-    allData[thisWeek] = JSON.parse(JSON.stringify(base)).map((p) => ({ ...p, id: uid() }));
+    // 复制上一周卡片结构作为本周起点，不带照片（避免数据膨胀）
+    allData[thisWeek] = JSON.parse(JSON.stringify(base)).map((p) => ({ ...p, id: uid(), photos: [] }));
     saveData();
   }
   currentWeek = thisWeek;
