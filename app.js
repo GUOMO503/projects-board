@@ -615,6 +615,8 @@ function startPolling() {
     if (!dataChanged(fresh)) return;
     // 拒绝用周数更少的数据覆盖当前状态（防止拉到写入前的旧快照）
     if (Object.keys(fresh).length < Object.keys(allData).length) return;
+    // 拒绝覆盖当前正在查看的周（防止 Firebase 旧数据抹掉刚导入的内容）
+    if (currentWeek && allData[currentWeek] && !fresh[currentWeek]) return;
     allData = fresh;
     if (!currentWeek || !allData[currentWeek]) {
       currentWeek = pickCurrentWeek();
