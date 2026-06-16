@@ -556,19 +556,18 @@ importInput.addEventListener('change', () => {
   const file = importInput.files[0];
   if (!file) return;
   const reader = new FileReader();
-  reader.onload = () => {
+  reader.onload = async () => {
     try {
       const imported = JSON.parse(reader.result);
       if (typeof imported !== 'object' || imported === null) throw new Error('格式错误');
       const weeks = Object.keys(imported);
       if (weeks.length === 0) throw new Error('文件中没有周数据');
-      // 将文件中的每一周合并进当前数据（覆盖同名周）
       const weekList = weeks.join('、');
       if (!confirm(`导入将覆盖以下周的数据：${weekList}，确定继续吗？`)) return;
       Object.assign(allData, imported);
-      saveData();
       currentWeek = weeks[weeks.length - 1];
       renderAll();
+      await saveData(); // 等待写入 Firebase 完成后再放开轮询
     } catch (err) {
       alert('导入失败：' + err.message);
     } finally {
@@ -609,7 +608,7 @@ function startPolling() {
     if (document.hidden) return;
     if (cardDialog.open || photoDialog.open) return;
     if (saveInFlight) return;
-    if (Date.now() - lastSaveTime < 10000) return;
+    if (Date.now() - lastSaveTime < 2000) return;
     const fresh = await loadData();
     if (!serverAvailable) return;
     if (!dataChanged(fresh)) return;
