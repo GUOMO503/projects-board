@@ -164,7 +164,7 @@ function renderWeekSelect() {
   const thisWeek = getISOWeekKey(new Date());
   const weeks = Object.keys(allData).sort();
   weekSelect.innerHTML = weeks.length
-    ? weeks.map((w) => `<option value=”${w}”>${w}${w === thisWeek ? '（本周）' : ''}</option>`).join('')
+    ? weeks.map((w) => `<option value="${w}">${w}${w === thisWeek ? '（本周）' : ''}</option>`).join('')
     : '<option value=””>暂无数据，请点击”新建本周”</option>';
   if (currentWeek) weekSelect.value = currentWeek;
   weekSelect.disabled = weeks.length === 0;
