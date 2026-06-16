@@ -62,7 +62,6 @@ const STAGES = [
 ];
 
 const board = document.getElementById('board');
-const timeline = document.getElementById('timeline');
 const weekSelect = document.getElementById('weekSelect');
 const serverStatus = document.getElementById('serverStatus');
 const newWeekBtn = document.getElementById('newWeekBtn');
@@ -157,7 +156,6 @@ function escapeHtml(str) {
 function renderAll() {
   renderWeekSelect();
   renderBoard();
-  renderTimeline();
 }
 
 function renderWeekSelect() {
@@ -289,34 +287,6 @@ function buildPinCard(project) {
   return el;
 }
 
-function renderTimeline() {
-  timeline.innerHTML = '';
-  const weeks = Object.keys(allData).sort();
-
-  if (weeks.length === 0) {
-    const empty = document.createElement('div');
-    empty.className = 'timeline-empty';
-    empty.textContent = '暂无历史快照，请点击“新建本周”创建第一个快照';
-    timeline.appendChild(empty);
-    return;
-  }
-
-  const thisWeek = getISOWeekKey(new Date());
-
-  for (const week of weeks) {
-    const item = document.createElement('div');
-    item.className = 'timeline-item';
-    item.textContent = week + (week === thisWeek ? '（本周）' : '');
-    if (week === currentWeek) item.classList.add('active');
-    item.addEventListener('click', () => {
-      currentWeek = week;
-      weekSelect.value = week;
-      renderBoard();
-      renderTimeline();
-    });
-    timeline.appendChild(item);
-  }
-}
 
 weekSelect.addEventListener('change', () => {
   const selected = weekSelect.value;
