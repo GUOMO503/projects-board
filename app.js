@@ -104,6 +104,7 @@ const FIREBASE_URL = 'https://projects-board-28ac0-default-rtdb.firebaseio.com';
 const DATA_URL = `${FIREBASE_URL}/board.json`;
 
 let serverAvailable = true;
+let lastSaveTime = 0;
 
 async function loadData() {
   try {
@@ -120,6 +121,7 @@ async function loadData() {
 }
 
 function saveData() {
+  lastSaveTime = Date.now();
   fetch(DATA_URL, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
@@ -600,6 +602,7 @@ function startPolling() {
     if (!serverAvailable) return;
     if (document.hidden) return;
     if (cardDialog.open || photoDialog.open) return;
+    if (Date.now() - lastSaveTime < 8000) return;
     const fresh = await loadData();
     if (!serverAvailable) return;
     if (!dataChanged(fresh)) return;
