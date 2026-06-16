@@ -1,62 +1,62 @@
 const STAGES = [
   {
-    id: 1, title: '土地准备', icon: '📐',
+    id: 1, title: '土地准备 Site Prep', icon: '📐',
     bullets: ['测量放线 Survey', '场地平整 Grading', '开挖地基 Excavation'],
-    desc: '根据建筑图纸确定房屋位置，完成场地平整和基坑开挖。',
+    desc: '根据建筑图纸确定房屋位置，完成场地平整和基坑开挖。Locate the house per drawings; grade the site and excavate the foundation.',
     bg: '#fdf2e6', accent: '#c9863c',
   },
   {
-    id: 2, title: '地基施工', icon: '🧱',
+    id: 2, title: '地基施工 Foundation', icon: '🧱',
     bullets: ['混凝土基础 Footing', '地下室墙体 Foundation Wall', '防水层 Waterproofing', '排水系统 Weeping Tile'],
-    desc: '浇筑混凝土基础，建立地下室墙体，做好防水和排水，抵御冻土和地下水。',
+    desc: '浇筑混凝土基础，建立地下室墙体，做好防水和排水，抵御冻土和地下水。Pour concrete footings and foundation walls; apply waterproofing and drainage.',
     bg: '#eceff2', accent: '#7d8a99',
   },
   {
-    id: 3, title: '木结构主体', icon: '🪵',
+    id: 3, title: '木结构主体 Framing', icon: '🪵',
     bullets: ['地梁系统 Floor Joists', '承重墙 Walls', '楼板系统 Subfloor', '屋架系统 Roof Trusses'],
-    desc: '工厂预制木材和龙架运至现场组装，形成坚固的主体结构。',
+    desc: '工厂预制木材和龙架运至现场组装，形成坚固的主体结构。Assemble prefabricated lumber and trusses on site to form the structural frame.',
     bg: '#f6ecd9', accent: '#b9824f',
   },
   {
-    id: 4, title: '房屋封闭（防风雨）', icon: '🏠',
-    bullets: ['OSB结构板', '防水透气膜 House Wrap', '门窗安装', '屋面防水及沥青瓦'],
-    desc: '完成外墙结构板、门窗、防水透气膜和屋面工程，使建筑达到防风雨状态。',
+    id: 4, title: '房屋封闭 Weatherproofing', icon: '🏠',
+    bullets: ['OSB结构板 OSB Sheathing', '防水透气膜 House Wrap', '门窗安装 Windows & Doors', '屋面防水及沥青瓦 Roofing'],
+    desc: '完成外墙结构板、门窗、防水透气膜和屋面工程，使建筑达到防风雨状态。Install sheathing, house wrap, windows, doors and roofing to make the building weather-tight.',
     bg: '#e9eff6', accent: '#5b7fa6',
   },
   {
-    id: 5, title: '机电安装（粗装）', icon: '🔌',
+    id: 5, title: '机电安装 Rough-in MEP', icon: '🔌',
     bullets: ['电气 Electrical', '给排水 Plumbing', '暖通 HVAC', '燃气 Gas'],
-    desc: '在墙体和楼板封闭前完成所有管线和线路的预埋安装。',
+    desc: '在墙体和楼板封闭前完成所有管线和线路的预埋安装。Run all rough-in wiring, pipes and ducts before walls are closed.',
     bg: '#fdf6e0', accent: '#d9a514',
   },
   {
-    id: 6, title: '保温施工', icon: '🧊',
+    id: 6, title: '保温施工 Insulation', icon: '🧊',
     bullets: ['墙体保温 R22-R24', '阁楼保温 R50-R60'],
-    desc: '安装墙体和阁楼保温材料，提升能效，适应寒冷气候。',
+    desc: '安装墙体和阁楼保温材料，提升能效，适应寒冷气候。Install wall and attic insulation for energy efficiency in cold climate.',
     bg: '#e6f4fb', accent: '#5fb3d9',
   },
   {
-    id: 7, title: '石膏板安装', icon: '🪚',
+    id: 7, title: '石膏板安装 Drywall', icon: '🪚',
     bullets: ['石膏板安装 Drywall', '接缝处理 Taping', '打磨 Sanding'],
-    desc: '安装石膏板，处理接缝并打磨平整，为后续装修做准备。',
+    desc: '安装石膏板，处理接缝并打磨平整，为后续装修做准备。Hang drywall, tape joints and sand smooth in preparation for finishing.',
     bg: '#f0f1f3', accent: '#9aa5b1',
   },
   {
-    id: 8, title: '室内装修', icon: '🛋️',
+    id: 8, title: '室内装修 Interior Finishing', icon: '🛋️',
     bullets: ['地板 Flooring', '橱柜 Cabinets', '油漆 Painting', '卫浴 Bathroom', '灯具 Lighting'],
-    desc: '完成地板、橱柜、油漆、卫浴和灯具等全部室内装修工程。',
+    desc: '完成地板、橱柜、油漆、卫浴和灯具等全部室内装修工程。Complete all interior finishes: flooring, cabinets, paint, bathrooms and lighting.',
     bg: '#faf1e3', accent: '#c2884a',
   },
   {
-    id: 9, title: '外立面施工', icon: '🏡',
+    id: 9, title: '外立面施工 Exterior Cladding', icon: '🏡',
     bullets: ['Vinyl Siding 挂板', 'Fiber Cement 纤维水泥板', 'Brick 砖', 'Stone Veneer 文化石'],
-    desc: '安装外墙装饰材料，提升美观性和耐久性。',
+    desc: '安装外墙装饰材料，提升美观性和耐久性。Install exterior cladding materials for aesthetics and durability.',
     bg: '#edf3ed', accent: '#7a9b76',
   },
   {
-    id: 10, title: '验收入住', icon: '🔑',
-    bullets: ['政府验收 Inspection', '领取入住许可 Occupancy Permit', '入住新家'],
-    desc: '通过验收后，取得入住许可，完成交房，正式入住新家。',
+    id: 10, title: '验收入住 Occupancy', icon: '🔑',
+    bullets: ['政府验收 Inspection', '领取入住许可 Occupancy Permit', '入住新家 Move In'],
+    desc: '通过验收后，取得入住许可，完成交房，正式入住新家。Pass inspections, obtain occupancy permit and hand over the keys.',
     bg: '#fdf6e0', accent: '#e0b13c',
   },
 ];
@@ -162,12 +162,12 @@ function renderWeekSelect() {
   const thisWeek = getISOWeekKey(new Date());
   const weeks = Object.keys(allData).sort();
   weekSelect.innerHTML = weeks.length
-    ? weeks.map((w) => `<option value="${w}">${w}${w === thisWeek ? '（本周）' : ''}</option>`).join('')
-    : '<option value=””>暂无数据，请点击”新建本周”</option>';
+    ? weeks.map((w) => `<option value="${w}">${w}${w === thisWeek ? '（本周 This Week）' : ''}</option>`).join('')
+    : '<option value=””>No data — click "新建本周 New Week"</option>';
   if (currentWeek) weekSelect.value = currentWeek;
   weekSelect.disabled = weeks.length === 0;
   deleteWeekBtn.disabled = !currentWeek;
-  serverStatus.textContent = serverAvailable ? '' : '⚠ 未连接，修改不会保存';
+  serverStatus.textContent = serverAvailable ? '' : '⚠ Offline — changes not saved 未连接';
 }
 
 function renderBoard() {
@@ -189,7 +189,7 @@ function renderBoard() {
     `;
     const addBtn = document.createElement('button');
     addBtn.className = 'add-card-btn';
-    addBtn.textContent = '+ 新建卡片';
+    addBtn.textContent = '+ 新建卡片 Add Card';
     addBtn.disabled = !currentWeek;
     addBtn.addEventListener('click', () => openCardDialog({ mode: 'add', stageId: stage.id }));
     header.appendChild(addBtn);
@@ -220,7 +220,7 @@ function renderBoard() {
     if (stageProjects.length === 0) {
       const empty = document.createElement('div');
       empty.className = 'pin-empty';
-      empty.textContent = '暂无项目';
+      empty.textContent = '暂无项目 No projects';
       list.appendChild(empty);
     } else {
       for (const p of stageProjects) {
@@ -253,7 +253,7 @@ function buildPinCard(project) {
   const editBtn = document.createElement('button');
   editBtn.className = 'pin-edit-btn';
   editBtn.textContent = '✎';
-  editBtn.title = '编辑';
+  editBtn.title = '编辑 Edit';
   editBtn.addEventListener('click', () => openCardDialog({ mode: 'edit', project }));
   top.appendChild(editBtn);
 
@@ -366,7 +366,7 @@ function openCardDialog({ mode, stageId, project }) {
   editingProjectId = mode === 'edit' ? project.id : null;
   pendingPhotos = mode === 'edit' ? [...(project.photos || [])] : [];
 
-  dialogTitle.textContent = mode === 'edit' ? '编辑项目卡片' : '新建项目卡片';
+  dialogTitle.textContent = mode === 'edit' ? '编辑项目卡片 Edit Card' : '新建项目卡片 New Card';
   fieldName.value = mode === 'edit' ? project.name : '';
   fieldSummary.value = mode === 'edit' ? (project.summary || '') : '';
   fieldLink.value = mode === 'edit' ? (project.link || '') : '';
@@ -397,7 +397,7 @@ function renderPhotoPreview() {
     removeBtn.type = 'button';
     removeBtn.className = 'remove-photo';
     removeBtn.textContent = '×';
-    removeBtn.title = '移除照片';
+    removeBtn.title = '移除照片 Remove';
     removeBtn.addEventListener('click', () => {
       pendingPhotos.splice(idx, 1);
       renderPhotoPreview();
@@ -442,7 +442,7 @@ cancelBtn.addEventListener('click', () => cardDialog.close());
 
 deleteCardBtn.addEventListener('click', () => {
   if (!editingProjectId) return;
-  if (!confirm('确定删除这张项目卡片吗？')) return;
+  if (!confirm('确定删除这张项目卡片吗？\nDelete this card?')) return;
   allData[currentWeek] = (allData[currentWeek] || []).filter((p) => p.id !== editingProjectId);
   saveData();
   cardDialog.close();
@@ -502,7 +502,7 @@ newWeekBtn.addEventListener('click', () => {
 
 deleteWeekBtn.addEventListener('click', () => {
   if (!currentWeek) return;
-  if (!confirm(`确定删除快照 ${currentWeek} 吗？此操作不可恢复。`)) return;
+  if (!confirm(`确定删除快照 ${currentWeek}？此操作不可恢复。\nDelete snapshot ${currentWeek}? This cannot be undone.`)) return;
   delete allData[currentWeek];
   saveData();
   const weeks = Object.keys(allData).sort();
@@ -513,7 +513,7 @@ deleteWeekBtn.addEventListener('click', () => {
 /* ---------- 导出/导入 ---------- */
 
 exportBtn.addEventListener('click', () => {
-  if (!currentWeek) return alert('请先选择一个周快照');
+  if (!currentWeek) return alert('请先选择一个周快照\nPlease select a week first.');
   const payload = { [currentWeek]: allData[currentWeek] };
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
@@ -531,17 +531,17 @@ importInput.addEventListener('change', () => {
   reader.onload = async () => {
     try {
       const imported = JSON.parse(reader.result);
-      if (typeof imported !== 'object' || imported === null) throw new Error('格式错误');
+      if (typeof imported !== 'object' || imported === null) throw new Error('格式错误 Invalid format');
       const weeks = Object.keys(imported);
-      if (weeks.length === 0) throw new Error('文件中没有周数据');
+      if (weeks.length === 0) throw new Error('文件中没有周数据 No week data found');
       const weekList = weeks.join('、');
-      if (!confirm(`导入将覆盖以下周的数据：${weekList}，确定继续吗？`)) return;
+      if (!confirm(`导入将覆盖以下周的数据：${weekList}，确定继续吗？\nImport will overwrite data for: ${weekList}. Continue?`)) return;
       Object.assign(allData, imported);
       currentWeek = weeks[weeks.length - 1];
       renderAll();
       await saveData(); // 等待写入 Firebase 完成后再放开轮询
     } catch (err) {
-      alert('导入失败：' + err.message);
+      alert('导入失败 Import failed: ' + err.message);
     } finally {
       importInput.value = '';
     }

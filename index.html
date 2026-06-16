@@ -3,19 +3,19 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>施工阶段看板</title>
+<title>施工阶段看板 Construction Stage Board</title>
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header class="page-header">
-    <h1>施工阶段看板</h1>
+    <h1>施工阶段看板 Construction Stage Board</h1>
     <div class="toolbar">
       <select id="weekSelect" class="week-select"></select>
-      <button id="newWeekBtn" class="btn">新建本周</button>
-      <button id="deleteWeekBtn" class="btn btn-danger">删除本周</button>
-      <button id="exportBtn" class="btn">导出本周</button>
+      <button id="newWeekBtn" class="btn">新建本周 New Week</button>
+      <button id="deleteWeekBtn" class="btn btn-danger">删除本周 Delete</button>
+      <button id="exportBtn" class="btn">导出本周 Export</button>
       <label class="btn">
-        导入本周
+        导入本周 Import
         <input type="file" id="importInput" accept="application/json" hidden />
       </label>
       <span id="serverStatus" class="server-status"></span>
@@ -27,33 +27,33 @@
   <!-- 新建/编辑卡片对话框 -->
   <dialog id="cardDialog">
     <form id="cardForm" method="dialog">
-      <h3 id="dialogTitle">新建项目卡片</h3>
+      <h3 id="dialogTitle">新建项目卡片 New Card</h3>
 
-      <label>项目名称
+      <label>项目名称 Name
         <input type="text" id="fieldName" required />
       </label>
 
-      <label>本周摘要
-        <textarea id="fieldSummary" rows="3" placeholder="一句话描述本周进展"></textarea>
+      <label>本周摘要 Weekly Update
+        <textarea id="fieldSummary" rows="3" placeholder="一句话描述本周进展 / Weekly progress note"></textarea>
       </label>
 
-      <label>项目链接（可选）
+      <label>项目链接 Link（可选 optional）
         <input type="url" id="fieldLink" placeholder="https://..." />
       </label>
 
-      <label>所属阶段
+      <label>所属阶段 Stage
         <select id="fieldStage"></select>
       </label>
 
-      <label>照片
+      <label>照片 Photos
         <input type="file" id="fieldPhotos" accept="image/*" multiple />
       </label>
       <div id="photoPreview" class="photo-preview"></div>
 
       <div class="dialog-actions">
-        <button type="button" id="deleteCardBtn" class="btn btn-danger" hidden>删除卡片</button>
-        <button type="button" id="cancelBtn" class="btn">取消</button>
-        <button type="submit" id="saveCardBtn" class="btn btn-primary">保存</button>
+        <button type="button" id="deleteCardBtn" class="btn btn-danger" hidden>删除卡片 Delete</button>
+        <button type="button" id="cancelBtn" class="btn">取消 Cancel</button>
+        <button type="submit" id="saveCardBtn" class="btn btn-primary">保存 Save</button>
       </div>
     </form>
   </dialog>
