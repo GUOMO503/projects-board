@@ -24,6 +24,12 @@ const STAGES = [
     bg: '#e9eff6', accent: '#5b7fa6',
   },
   {
+    id: 9, title: '外立面施工 Exterior Cladding', icon: '🏡',
+    bullets: ['挂板 Vinyl Siding', '纤维水泥板 Fiber Cement', '砖 Brick', '文化石 Stone Veneer'],
+    desc: '安装外墙装饰材料，提升美观性和耐久性。Install exterior cladding materials for aesthetics and durability.',
+    bg: '#edf3ed', accent: '#7a9b76',
+  },
+  {
     id: 5, title: '机电安装 Rough-in MEP', icon: '🔌',
     bullets: ['电气 Electrical', '给排水 Plumbing', '暖通 HVAC', '燃气 Gas'],
     desc: '在墙体和楼板封闭前完成所有管线和线路的预埋安装。Run all rough-in wiring, pipes and ducts before walls are closed.',
@@ -46,12 +52,6 @@ const STAGES = [
     bullets: ['地板 Flooring', '橱柜 Cabinets', '油漆 Painting', '卫浴 Bathroom', '灯具 Lighting'],
     desc: '完成地板、橱柜、油漆、卫浴和灯具等全部室内装修工程。Complete all interior finishes: flooring, cabinets, paint, bathrooms and lighting.',
     bg: '#faf1e3', accent: '#c2884a',
-  },
-  {
-    id: 9, title: '外立面施工 Exterior Cladding', icon: '🏡',
-    bullets: ['挂板 Vinyl Siding', '纤维水泥板 Fiber Cement', '砖 Brick', '文化石 Stone Veneer'],
-    desc: '安装外墙装饰材料，提升美观性和耐久性。Install exterior cladding materials for aesthetics and durability.',
-    bg: '#edf3ed', accent: '#7a9b76',
   },
   {
     id: 10, title: '验收入住 Occupancy', icon: '🔑',
