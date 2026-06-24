@@ -105,6 +105,7 @@ const DATA_URL = `${FIREBASE_URL}/board.json`;
 let serverAvailable = true;
 let lastSaveTime = 0;
 let saveInFlight = false;
+let initialLoadOk = false; // 初始加载成功前禁止写入，避免用残缺本地数据覆盖云端
 
 async function loadData() {
   try {
@@ -121,6 +122,12 @@ async function loadData() {
 }
 
 async function saveData() {
+  if (!initialLoadOk) {
+    console.error('拒绝保存：初始数据未加载成功，避免用残缺数据覆盖云端 / Save blocked: initial load not confirmed');
+    serverAvailable = false;
+    renderWeekSelect();
+    return;
+  }
   lastSaveTime = Date.now();
   saveInFlight = true;
   try {
@@ -166,7 +173,8 @@ function renderWeekSelect() {
     : '<option value=””>No data — click "新建本周 New Week"</option>';
   if (currentWeek) weekSelect.value = currentWeek;
   weekSelect.disabled = weeks.length === 0;
-  deleteWeekBtn.disabled = !currentWeek;
+  newWeekBtn.disabled = !initialLoadOk;
+  deleteWeekBtn.disabled = !currentWeek || !initialLoadOk;
   serverStatus.textContent = serverAvailable ? '' : '⚠ Offline — changes not saved 未连接';
 }
 
@@ -600,6 +608,7 @@ function startPolling() {
 
 (async function init() {
   allData = await loadData();
+  initialLoadOk = serverAvailable;
   currentWeek = pickCurrentWeek();
   renderAll();
   startPolling();
