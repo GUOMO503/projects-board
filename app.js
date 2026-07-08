@@ -128,13 +128,14 @@ async function saveData() {
     renderWeekSelect();
     return;
   }
+  if (!currentWeek) return;
   lastSaveTime = Date.now();
   saveInFlight = true;
   try {
-    const res = await fetch(DATA_URL, {
+    const res = await fetch(`${FIREBASE_URL}/board/${currentWeek}.json`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(allData),
+      body: JSON.stringify(allData[currentWeek]),
     });
     if (!res.ok) throw new Error('保存失败');
     serverAvailable = true;
@@ -144,7 +145,24 @@ async function saveData() {
     renderWeekSelect();
   } finally {
     saveInFlight = false;
-    lastSaveTime = Date.now(); // 从写入完成时开始计保护窗口
+    lastSaveTime = Date.now();
+  }
+}
+
+async function deleteWeekFromFirebase(week) {
+  lastSaveTime = Date.now();
+  saveInFlight = true;
+  try {
+    const res = await fetch(`${FIREBASE_URL}/board/${week}.json`, { method: 'DELETE' });
+    if (!res.ok) throw new Error('删除失败');
+    serverAvailable = true;
+  } catch (err) {
+    serverAvailable = false;
+    console.error('删除失败:', err);
+    renderWeekSelect();
+  } finally {
+    saveInFlight = false;
+    lastSaveTime = Date.now();
   }
 }
 
@@ -298,10 +316,8 @@ function buildPinCard(project) {
 
 weekSelect.addEventListener('change', () => {
   const selected = weekSelect.value;
-  console.log('[dropdown change] value:', selected, '| allData keys:', Object.keys(allData), '| projects:', (allData[selected] || []).length);
   currentWeek = selected || null;
   renderBoard();
-  renderTimeline();
 });
 
 /* ---------- 拖拽 ---------- */
@@ -502,20 +518,23 @@ newWeekBtn.addEventListener('click', () => {
     const base = lastWeek ? allData[lastWeek] : [];
     // 复制上一周卡片结构作为本周起点，不带照片（避免数据膨胀）
     allData[thisWeek] = JSON.parse(JSON.stringify(base)).map((p) => ({ ...p, id: uid(), photos: [] }));
+    currentWeek = thisWeek;
     saveData();
+  } else {
+    currentWeek = thisWeek;
   }
-  currentWeek = thisWeek;
   renderAll();
 });
 
 deleteWeekBtn.addEventListener('click', () => {
   if (!currentWeek) return;
   if (!confirm(`确定删除快照 ${currentWeek}？此操作不可恢复。\nDelete snapshot ${currentWeek}? This cannot be undone.`)) return;
-  delete allData[currentWeek];
-  saveData();
+  const weekToDelete = currentWeek;
+  delete allData[weekToDelete];
   const weeks = Object.keys(allData).sort();
   currentWeek = weeks[weeks.length - 1] || null;
   renderAll();
+  deleteWeekFromFirebase(weekToDelete);
 });
 
 /* ---------- 导出/导入 ---------- */
@@ -547,7 +566,12 @@ importInput.addEventListener('change', () => {
       Object.assign(allData, imported);
       currentWeek = weeks[weeks.length - 1];
       renderAll();
-      await saveData(); // 等待写入 Firebase 完成后再放开轮询
+      // 用 PATCH 只合并导入的周，不影响 Firebase 里其他周的数据
+      await fetch(DATA_URL, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(imported),
+      });
     } catch (err) {
       alert('导入失败 Import failed: ' + err.message);
     } finally {
