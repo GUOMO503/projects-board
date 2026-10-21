@@ -1,65 +1,111 @@
 const STAGES = [
   {
-    id: 1, title: '土地准备 Site Prep', icon: '📐',
-    bullets: ['测量放线 Survey', '场地平整 Grading', '开挖地基 Excavation'],
-    desc: '根据建筑图纸确定房屋位置，完成场地平整和基坑开挖。Locate the house per drawings; grade the site and excavate the foundation.',
-    bg: '#fdf2e6', accent: '#c9863c',
+    id: 1, icon: '📐', bg: '#fdf2e6', accent: '#c9863c',
+    zh: { title: '土地准备', bullets: ['测量放线', '场地平整', '开挖地基'], desc: '根据建筑图纸确定房屋位置，完成场地平整和基坑开挖。' },
+    en: { title: 'Site Prep', bullets: ['Survey', 'Grading', 'Excavation'], desc: 'Locate the house per drawings; grade the site and excavate the foundation.' },
   },
   {
-    id: 2, title: '地基施工 Foundation', icon: '🧱',
-    bullets: ['混凝土基础 Footing', '地下室墙体 Foundation Wall', '防水层 Waterproofing', '排水系统 Weeping Tile'],
-    desc: '浇筑混凝土基础，建立地下室墙体，做好防水和排水，抵御冻土和地下水。Pour concrete footings and foundation walls; apply waterproofing and drainage.',
-    bg: '#eceff2', accent: '#7d8a99',
+    id: 2, icon: '🧱', bg: '#eceff2', accent: '#7d8a99',
+    zh: { title: '地基施工', bullets: ['混凝土基础', '地下室墙体', '防水层', '排水系统'], desc: '浇筑混凝土基础，建立地下室墙体，做好防水和排水，抵御冻土和地下水。' },
+    en: { title: 'Foundation', bullets: ['Footing', 'Foundation Wall', 'Waterproofing', 'Weeping Tile'], desc: 'Pour concrete footings and foundation walls; apply waterproofing and drainage.' },
   },
   {
-    id: 3, title: '木结构主体 Framing', icon: '🪵',
-    bullets: ['地梁系统 Floor Joists', '承重墙 Walls', '楼板系统 Subfloor', '屋架系统 Roof Trusses'],
-    desc: '工厂预制木材和龙架运至现场组装，形成坚固的主体结构。Assemble prefabricated lumber and trusses on site to form the structural frame.',
-    bg: '#f6ecd9', accent: '#b9824f',
+    id: 3, icon: '🪵', bg: '#f6ecd9', accent: '#b9824f',
+    zh: { title: '木结构主体', bullets: ['地梁系统', '承重墙', '楼板系统', '屋架系统'], desc: '工厂预制木材和龙架运至现场组装，形成坚固的主体结构。' },
+    en: { title: 'Framing', bullets: ['Floor Joists', 'Walls', 'Subfloor', 'Roof Trusses'], desc: 'Assemble prefabricated lumber and trusses on site to form the structural frame.' },
   },
   {
-    id: 4, title: '房屋封闭 Weatherproofing', icon: '🏠',
-    bullets: ['OSB结构板 OSB Sheathing', '防水透气膜 House Wrap', '门窗安装 Windows & Doors', '屋面防水及沥青瓦 Roofing'],
-    desc: '完成外墙结构板、门窗、防水透气膜和屋面工程，使建筑达到防风雨状态。Install sheathing, house wrap, windows, doors and roofing to make the building weather-tight.',
-    bg: '#e9eff6', accent: '#5b7fa6',
+    id: 4, icon: '🏠', bg: '#e9eff6', accent: '#5b7fa6',
+    zh: { title: '房屋封闭', bullets: ['OSB结构板', '防水透气膜', '门窗安装', '屋面防水及沥青瓦'], desc: '完成外墙结构板、门窗、防水透气膜和屋面工程，使建筑达到防风雨状态。' },
+    en: { title: 'Weatherproofing', bullets: ['OSB Sheathing', 'House Wrap', 'Windows & Doors', 'Roofing'], desc: 'Install sheathing, house wrap, windows, doors and roofing to make the building weather-tight.' },
   },
   {
-    id: 5, title: '外立面施工 Exterior Cladding', icon: '🏡',
-    bullets: ['挂板 Vinyl Siding', '纤维水泥板 Fiber Cement', '砖 Brick', '文化石 Stone Veneer'],
-    desc: '安装外墙装饰材料，提升美观性和耐久性。Install exterior cladding materials for aesthetics and durability.',
-    bg: '#edf3ed', accent: '#7a9b76',
+    id: 5, icon: '🏡', bg: '#edf3ed', accent: '#7a9b76',
+    zh: { title: '外立面施工', bullets: ['挂板', '纤维水泥板', '砖', '文化石'], desc: '安装外墙装饰材料，提升美观性和耐久性。' },
+    en: { title: 'Exterior Cladding', bullets: ['Vinyl Siding', 'Fiber Cement', 'Brick', 'Stone Veneer'], desc: 'Install exterior cladding materials for aesthetics and durability.' },
   },
   {
-    id: 6, title: '机电安装 Rough-in MEP', icon: '🔌',
-    bullets: ['电气 Electrical', '给排水 Plumbing', '暖通 HVAC', '燃气 Gas'],
-    desc: '在墙体和楼板封闭前完成所有管线和线路的预埋安装。Run all rough-in wiring, pipes and ducts before walls are closed.',
-    bg: '#fdf6e0', accent: '#d9a514',
+    id: 6, icon: '🔌', bg: '#fdf6e0', accent: '#d9a514',
+    zh: { title: '机电安装', bullets: ['电气', '给排水', '暖通', '燃气'], desc: '在墙体和楼板封闭前完成所有管线和线路的预埋安装。' },
+    en: { title: 'Rough-in MEP', bullets: ['Electrical', 'Plumbing', 'HVAC', 'Gas'], desc: 'Run all rough-in wiring, pipes and ducts before walls are closed.' },
   },
   {
-    id: 7, title: '保温施工 Insulation', icon: '🧊',
-    bullets: ['墙体保温 R22-R24', '阁楼保温 R50-R60'],
-    desc: '安装墙体和阁楼保温材料，提升能效，适应寒冷气候。Install wall and attic insulation for energy efficiency in cold climate.',
-    bg: '#e6f4fb', accent: '#5fb3d9',
+    id: 7, icon: '🧊', bg: '#e6f4fb', accent: '#5fb3d9',
+    zh: { title: '保温施工', bullets: ['墙体保温 R22-R24', '阁楼保温 R50-R60'], desc: '安装墙体和阁楼保温材料，提升能效，适应寒冷气候。' },
+    en: { title: 'Insulation', bullets: ['Wall R22-R24', 'Attic R50-R60'], desc: 'Install wall and attic insulation for energy efficiency in cold climate.' },
   },
   {
-    id: 8, title: '石膏板安装 Drywall', icon: '🪚',
-    bullets: ['石膏板安装 Drywall', '接缝处理 Taping', '打磨 Sanding'],
-    desc: '安装石膏板，处理接缝并打磨平整，为后续装修做准备。Hang drywall, tape joints and sand smooth in preparation for finishing.',
-    bg: '#f0f1f3', accent: '#9aa5b1',
+    id: 8, icon: '🪚', bg: '#f0f1f3', accent: '#9aa5b1',
+    zh: { title: '石膏板安装', bullets: ['石膏板安装', '接缝处理', '打磨'], desc: '安装石膏板，处理接缝并打磨平整，为后续装修做准备。' },
+    en: { title: 'Drywall', bullets: ['Drywall', 'Taping', 'Sanding'], desc: 'Hang drywall, tape joints and sand smooth in preparation for finishing.' },
   },
   {
-    id: 9, title: '室内装修 Interior Finishing', icon: '🛋️',
-    bullets: ['地板 Flooring', '橱柜 Cabinets', '油漆 Painting', '卫浴 Bathroom', '灯具 Lighting'],
-    desc: '完成地板、橱柜、油漆、卫浴和灯具等全部室内装修工程。Complete all interior finishes: flooring, cabinets, paint, bathrooms and lighting.',
-    bg: '#faf1e3', accent: '#c2884a',
+    id: 9, icon: '🛋️', bg: '#faf1e3', accent: '#c2884a',
+    zh: { title: '室内装修', bullets: ['地板', '橱柜', '油漆', '卫浴', '灯具'], desc: '完成地板、橱柜、油漆、卫浴和灯具等全部室内装修工程。' },
+    en: { title: 'Interior Finishing', bullets: ['Flooring', 'Cabinets', 'Painting', 'Bathroom', 'Lighting'], desc: 'Complete all interior finishes: flooring, cabinets, paint, bathrooms and lighting.' },
   },
   {
-    id: 10, title: '验收入住 Occupancy', icon: '🔑',
-    bullets: ['政府验收 Inspection', '领取入住许可 Occupancy Permit', '入住新家 Move In'],
-    desc: '通过验收后，取得入住许可，完成交房，正式入住新家。Pass inspections, obtain occupancy permit and hand over the keys.',
-    bg: '#fdf6e0', accent: '#e0b13c',
+    id: 10, icon: '🔑', bg: '#fdf6e0', accent: '#e0b13c',
+    zh: { title: '验收入住', bullets: ['政府验收', '领取入住许可', '入住新家'], desc: '通过验收后，取得入住许可，完成交房，正式入住新家。' },
+    en: { title: 'Occupancy', bullets: ['Inspection', 'Occupancy Permit', 'Move In'], desc: 'Pass inspections, obtain occupancy permit and hand over the keys.' },
   },
 ];
+
+/* ---------- 语言 ---------- */
+
+let lang = (() => { const v = localStorage.getItem('lang'); return v === 'zh' || v === 'en' ? v : 'bilingual'; })();
+
+const UI = {
+  pageTitle:    { zh: '施工阶段看板', en: 'Construction Stage Board' },
+  newWeek:      { zh: '新建本周', en: 'New Week' },
+  deleteWeek:   { zh: '删除本周', en: 'Delete' },
+  export:       { zh: '导出本周', en: 'Export' },
+  import:       { zh: '导入本周', en: 'Import' },
+  addCard:      { zh: '+ 新建卡片', en: '+ Add Card' },
+  noProjects:   { zh: '暂无项目', en: 'No projects' },
+  thisWeek:     { zh: '（本周）', en: ' (This Week)', bi: '（本周 This Week）' },
+  noData:       { zh: '暂无数据 — 点击「新建本周」', en: 'No data — click "New Week"' },
+  offline:      { zh: '⚠ 离线 — 修改未保存', en: '⚠ Offline — changes not saved', bi: '⚠ Offline — changes not saved 未连接' },
+  newCardTitle: { zh: '新建项目卡片', en: 'New Card', bi: '新建项目卡片 New Card' },
+  editCardTitle:{ zh: '编辑项目卡片', en: 'Edit Card', bi: '编辑项目卡片 Edit Card' },
+  labelName:    { zh: '项目名称', en: 'Name' },
+  labelSummary: { zh: '本周摘要', en: 'Weekly Update' },
+  phSummary:    { zh: '一句话描述本周进展', en: 'Weekly progress note', bi: '一句话描述本周进展 / Weekly progress note' },
+  labelLink:    { zh: '项目链接（可选）', en: 'Link (optional)', bi: '项目链接 Link（可选 optional）' },
+  labelStage:   { zh: '所属阶段', en: 'Stage' },
+  labelPhotos:  { zh: '照片', en: 'Photos' },
+  deleteCard:   { zh: '删除卡片', en: 'Delete', bi: '删除卡片 Delete' },
+  cancel:       { zh: '取消', en: 'Cancel', bi: '取消 Cancel' },
+  save:         { zh: '保存', en: 'Save', bi: '保存 Save' },
+};
+
+function s(key) {
+  const e = UI[key];
+  if (!e) return key;
+  if (lang === 'zh') return e.zh;
+  if (lang === 'en') return e.en;
+  return e.bi ?? `${e.zh} ${e.en}`;
+}
+
+function stageText(stage) {
+  const zh = stage.zh, en = stage.en;
+  if (lang === 'zh') return { title: zh.title, bullets: zh.bullets, desc: zh.desc };
+  if (lang === 'en') return { title: en.title, bullets: en.bullets, desc: en.desc };
+  return {
+    title: `${zh.title} ${en.title}`,
+    bullets: zh.bullets.map((b, i) => `${b} ${en.bullets[i]}`),
+    desc: `${zh.desc}${en.desc}`,
+  };
+}
+
+function applyLang() {
+  document.title = s('pageTitle');
+  document.querySelector('.page-header h1').textContent = s('pageTitle');
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = s(el.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => { el.placeholder = s(el.dataset.i18nPh); });
+  document.querySelectorAll('.lang-btn').forEach(btn => { btn.classList.toggle('active', btn.dataset.lang === lang); });
+  renderAll();
+}
 
 const board = document.getElementById('board');
 const weekSelect = document.getElementById('weekSelect');
@@ -187,13 +233,13 @@ function renderWeekSelect() {
   const thisWeek = getISOWeekKey(new Date());
   const weeks = Object.keys(allData).sort();
   weekSelect.innerHTML = weeks.length
-    ? weeks.map((w) => `<option value="${w}">${w}${w === thisWeek ? '（本周 This Week）' : ''}</option>`).join('')
-    : '<option value=””>No data — click "新建本周 New Week"</option>';
+    ? weeks.map((w) => `<option value=”${w}”>${w}${w === thisWeek ? s('thisWeek') : ''}</option>`).join('')
+    : `<option value=””>${s('noData')}</option>`;
   if (currentWeek) weekSelect.value = currentWeek;
   weekSelect.disabled = weeks.length === 0;
   newWeekBtn.disabled = !initialLoadOk;
   deleteWeekBtn.disabled = !currentWeek || !initialLoadOk;
-  serverStatus.textContent = serverAvailable ? '' : '⚠ Offline — changes not saved 未连接';
+  serverStatus.textContent = serverAvailable ? '' : s('offline');
 }
 
 function renderBoard() {
@@ -207,32 +253,33 @@ function renderBoard() {
     card.style.setProperty('--stage-accent', stage.accent);
     card.dataset.icon = stage.icon || '';
 
+    const { title, bullets, desc } = stageText(stage);
     const header = document.createElement('div');
     header.className = 'stage-header';
     header.innerHTML = `
       <span class="stage-number">${stage.id}</span>
-      <span class="stage-title">${stage.title}</span>
+      <span class="stage-title">${title}</span>
     `;
     const addBtn = document.createElement('button');
     addBtn.className = 'add-card-btn';
-    addBtn.textContent = '+ 新建卡片 Add Card';
+    addBtn.textContent = s('addCard');
     addBtn.disabled = !currentWeek;
     addBtn.addEventListener('click', () => openCardDialog({ mode: 'add', stageId: stage.id }));
     header.appendChild(addBtn);
     card.appendChild(header);
 
-    if (stage.bullets && stage.bullets.length) {
-      const bullets = document.createElement('div');
-      bullets.className = 'stage-bullets';
-      bullets.innerHTML = stage.bullets.map((b) => `<span>● ${escapeHtml(b)}</span>`).join('');
-      card.appendChild(bullets);
+    if (bullets.length) {
+      const bulletsEl = document.createElement('div');
+      bulletsEl.className = 'stage-bullets';
+      bulletsEl.innerHTML = bullets.map((b) => `<span>● ${escapeHtml(b)}</span>`).join('');
+      card.appendChild(bulletsEl);
     }
 
-    if (stage.desc) {
-      const desc = document.createElement('div');
-      desc.className = 'stage-desc';
-      desc.textContent = stage.desc;
-      card.appendChild(desc);
+    if (desc) {
+      const descEl = document.createElement('div');
+      descEl.className = 'stage-desc';
+      descEl.textContent = desc;
+      card.appendChild(descEl);
     }
 
 
@@ -246,7 +293,7 @@ function renderBoard() {
     if (stageProjects.length === 0) {
       const empty = document.createElement('div');
       empty.className = 'pin-empty';
-      empty.textContent = '暂无项目 No projects';
+      empty.textContent = s('noProjects');
       list.appendChild(empty);
     } else {
       for (const p of stageProjects) {
@@ -390,14 +437,14 @@ function openCardDialog({ mode, stageId, project }) {
   editingProjectId = mode === 'edit' ? project.id : null;
   pendingPhotos = mode === 'edit' ? [...(project.photos || [])] : [];
 
-  dialogTitle.textContent = mode === 'edit' ? '编辑项目卡片 Edit Card' : '新建项目卡片 New Card';
+  dialogTitle.textContent = s(mode === 'edit' ? 'editCardTitle' : 'newCardTitle');
   fieldName.value = mode === 'edit' ? project.name : '';
   fieldSummary.value = mode === 'edit' ? (project.summary || '') : '';
   fieldLink.value = mode === 'edit' ? (project.link || '') : '';
   fieldPhotos.value = '';
 
   fieldStage.innerHTML = STAGES.map(
-    (s) => `<option value="${s.id}">${s.id}. ${s.title}</option>`
+    (st) => `<option value="${st.id}">${st.id}. ${stageText(st).title}</option>`
   ).join('');
   fieldStage.value = String(mode === 'edit' ? project.stageId : stageId);
 
@@ -466,7 +513,8 @@ cancelBtn.addEventListener('click', () => cardDialog.close());
 
 deleteCardBtn.addEventListener('click', () => {
   if (!editingProjectId) return;
-  if (!confirm('确定删除这张项目卡片吗？\nDelete this card?')) return;
+  const _delMsg = lang === 'zh' ? '确定删除这张项目卡片吗？' : lang === 'en' ? 'Delete this card?' : '确定删除这张项目卡片吗？\nDelete this card?';
+  if (!confirm(_delMsg)) return;
   allData[currentWeek] = (allData[currentWeek] || []).filter((p) => p.id !== editingProjectId);
   saveData();
   cardDialog.close();
@@ -528,7 +576,12 @@ newWeekBtn.addEventListener('click', () => {
 
 deleteWeekBtn.addEventListener('click', () => {
   if (!currentWeek) return;
-  if (!confirm(`确定删除快照 ${currentWeek}？此操作不可恢复。\nDelete snapshot ${currentWeek}? This cannot be undone.`)) return;
+  const _weekDelMsg = lang === 'zh'
+    ? `确定删除快照 ${currentWeek}？此操作不可恢复。`
+    : lang === 'en'
+    ? `Delete snapshot ${currentWeek}? This cannot be undone.`
+    : `确定删除快照 ${currentWeek}？此操作不可恢复。\nDelete snapshot ${currentWeek}? This cannot be undone.`;
+  if (!confirm(_weekDelMsg)) return;
   const weekToDelete = currentWeek;
   delete allData[weekToDelete];
   const weeks = Object.keys(allData).sort();
@@ -540,7 +593,7 @@ deleteWeekBtn.addEventListener('click', () => {
 /* ---------- 导出/导入 ---------- */
 
 exportBtn.addEventListener('click', () => {
-  if (!currentWeek) return alert('请先选择一个周快照\nPlease select a week first.');
+  if (!currentWeek) return alert(lang === 'zh' ? '请先选择一个周快照' : lang === 'en' ? 'Please select a week first.' : '请先选择一个周快照\nPlease select a week first.');
   const payload = { [currentWeek]: allData[currentWeek] };
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
@@ -562,7 +615,12 @@ importInput.addEventListener('change', () => {
       const weeks = Object.keys(imported);
       if (weeks.length === 0) throw new Error('文件中没有周数据 No week data found');
       const weekList = weeks.join('、');
-      if (!confirm(`导入将覆盖以下周的数据：${weekList}，确定继续吗？\nImport will overwrite data for: ${weekList}. Continue?`)) return;
+      const _importMsg = lang === 'zh'
+        ? `导入将覆盖以下周的数据：${weekList}，确定继续吗？`
+        : lang === 'en'
+        ? `Import will overwrite data for: ${weekList}. Continue?`
+        : `导入将覆盖以下周的数据：${weekList}，确定继续吗？\nImport will overwrite data for: ${weekList}. Continue?`;
+      if (!confirm(_importMsg)) return;
       Object.assign(allData, imported);
       currentWeek = weeks[weeks.length - 1];
       renderAll();
@@ -573,7 +631,7 @@ importInput.addEventListener('change', () => {
         body: JSON.stringify(imported),
       });
     } catch (err) {
-      alert('导入失败 Import failed: ' + err.message);
+      alert((lang === 'zh' ? '导入失败：' : lang === 'en' ? 'Import failed: ' : '导入失败 Import failed: ') + err.message);
     } finally {
       importInput.value = '';
     }
@@ -634,6 +692,13 @@ function startPolling() {
   allData = await loadData();
   initialLoadOk = serverAvailable;
   currentWeek = pickCurrentWeek();
-  renderAll();
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      lang = btn.dataset.lang;
+      localStorage.setItem('lang', lang);
+      applyLang();
+    });
+  });
+  applyLang();
   startPolling();
 })();

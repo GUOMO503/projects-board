@@ -11,13 +11,18 @@
     <h1>施工阶段看板 Construction Stage Board</h1>
     <div class="toolbar">
       <select id="weekSelect" class="week-select"></select>
-      <button id="newWeekBtn" class="btn">新建本周 New Week</button>
-      <button id="deleteWeekBtn" class="btn btn-danger">删除本周 Delete</button>
-      <button id="exportBtn" class="btn">导出本周 Export</button>
+      <button id="newWeekBtn" class="btn" data-i18n="newWeek">新建本周 New Week</button>
+      <button id="deleteWeekBtn" class="btn btn-danger" data-i18n="deleteWeek">删除本周 Delete</button>
+      <button id="exportBtn" class="btn" data-i18n="export">导出本周 Export</button>
       <label class="btn">
-        导入本周 Import
+        <span data-i18n="import">导入本周 Import</span>
         <input type="file" id="importInput" accept="application/json" hidden />
       </label>
+      <div class="lang-toggle">
+        <button class="lang-btn" data-lang="zh">中</button>
+        <button class="lang-btn" data-lang="bilingual">双语</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
       <span id="serverStatus" class="server-status"></span>
     </div>
   </header>
@@ -29,31 +34,31 @@
     <form id="cardForm" method="dialog">
       <h3 id="dialogTitle">新建项目卡片 New Card</h3>
 
-      <label>项目名称 Name
+      <label><span data-i18n="labelName">项目名称 Name</span>
         <input type="text" id="fieldName" required />
       </label>
 
-      <label>本周摘要 Weekly Update
-        <textarea id="fieldSummary" rows="3" placeholder="一句话描述本周进展 / Weekly progress note"></textarea>
+      <label><span data-i18n="labelSummary">本周摘要 Weekly Update</span>
+        <textarea id="fieldSummary" rows="3" data-i18n-ph="phSummary" placeholder="一句话描述本周进展 / Weekly progress note"></textarea>
       </label>
 
-      <label>项目链接 Link（可选 optional）
+      <label><span data-i18n="labelLink">项目链接 Link（可选 optional）</span>
         <input type="url" id="fieldLink" placeholder="https://..." />
       </label>
 
-      <label>所属阶段 Stage
+      <label><span data-i18n="labelStage">所属阶段 Stage</span>
         <select id="fieldStage"></select>
       </label>
 
-      <label>照片 Photos
+      <label><span data-i18n="labelPhotos">照片 Photos</span>
         <input type="file" id="fieldPhotos" accept="image/*" multiple />
       </label>
       <div id="photoPreview" class="photo-preview"></div>
 
       <div class="dialog-actions">
-        <button type="button" id="deleteCardBtn" class="btn btn-danger" hidden>删除卡片 Delete</button>
-        <button type="button" id="cancelBtn" class="btn">取消 Cancel</button>
-        <button type="submit" id="saveCardBtn" class="btn btn-primary">保存 Save</button>
+        <button type="button" id="deleteCardBtn" class="btn btn-danger" hidden data-i18n="deleteCard">删除卡片 Delete</button>
+        <button type="button" id="cancelBtn" class="btn" data-i18n="cancel">取消 Cancel</button>
+        <button type="submit" id="saveCardBtn" class="btn btn-primary" data-i18n="save">保存 Save</button>
       </div>
     </form>
   </dialog>
