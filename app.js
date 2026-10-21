@@ -103,7 +103,8 @@ function applyLang() {
   document.querySelector('.page-header h1').textContent = s('pageTitle');
   document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = s(el.dataset.i18n); });
   document.querySelectorAll('[data-i18n-ph]').forEach(el => { el.placeholder = s(el.dataset.i18nPh); });
-  document.querySelectorAll('.lang-btn').forEach(btn => { btn.classList.toggle('active', btn.dataset.lang === lang); });
+  const langSelect = document.getElementById('langSelect');
+  if (langSelect) langSelect.value = lang;
   renderAll();
 }
 
@@ -244,7 +245,8 @@ function renderWeekSelect() {
 
 function renderBoard() {
   board.innerHTML = '';
-  const projects = currentWeek ? (allData[currentWeek] || []) : [];
+  const raw = currentWeek ? (allData[currentWeek] || []) : [];
+  const projects = Array.isArray(raw) ? raw : Object.values(raw);
 
   for (const stage of STAGES) {
     const card = document.createElement('section');
@@ -692,13 +694,14 @@ function startPolling() {
   allData = await loadData();
   initialLoadOk = serverAvailable;
   currentWeek = pickCurrentWeek();
-  document.querySelectorAll('.lang-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      lang = btn.dataset.lang;
+  const langSelect = document.getElementById('langSelect');
+  if (langSelect) {
+    langSelect.addEventListener('change', () => {
+      lang = langSelect.value;
       localStorage.setItem('lang', lang);
       applyLang();
     });
-  });
+  }
   applyLang();
   startPolling();
 })();
