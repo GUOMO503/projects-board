@@ -1,4 +1,4 @@
-const STAGES = [
+﻿const STAGES = [
   {
     id: 1, icon: '📐', bg: '#fdf2e6', accent: '#c9863c',
     zh: { title: '土地准备', bullets: ['测量放线', '场地平整', '开挖地基'], desc: '根据建筑图纸确定房屋位置，完成场地平整和基坑开挖。' },
@@ -234,8 +234,8 @@ function renderWeekSelect() {
   const thisWeek = getISOWeekKey(new Date());
   const weeks = Object.keys(allData).sort();
   weekSelect.innerHTML = weeks.length
-    ? weeks.map((w) => `<option value=”${w}”>${w}${w === thisWeek ? s('thisWeek') : ''}</option>`).join('')
-    : `<option value=””>${s('noData')}</option>`;
+    ? weeks.map((w) => `<option value="${w}">${w}${w === thisWeek ? s('thisWeek') : ''}</option>`).join('')
+    : `<option value="">${s('noData')}</option>`;
   if (currentWeek) weekSelect.value = currentWeek;
   weekSelect.disabled = weeks.length === 0;
   newWeekBtn.disabled = !initialLoadOk;
@@ -378,7 +378,7 @@ function attachDropEvents(list) {
     const dragging = document.querySelector('.pin-card.dragging');
     if (!dragging) return;
 
-    // 如果列表当前只有“暂无项目”占位，先清空
+    // 如果列表当前只有“暂无项目"占位，先清空
     const placeholder = list.querySelector('.pin-empty');
     if (placeholder) placeholder.remove();
 
@@ -429,7 +429,7 @@ function syncOrderFromDOM() {
 
   allData[currentWeek] = newOrder;
   saveData();
-  // 重新渲染以恢复空区块的“暂无项目”提示等
+  // 重新渲染以恢复空区块的“暂无项目"提示等
   renderBoard();
 }
 
