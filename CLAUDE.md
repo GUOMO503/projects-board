@@ -1,7 +1,7 @@
 # 项目说明
 
 ## 工作目录
-所有文件操作必须限定在 `D:\GUOMO\WORK\都灵建筑\Claude\项目素材管道` 内。未经用户明确指示，不得在此目录之外创建、修改或删除任何文件。
+所有文件操作必须限定在 `D:\GUOMO\WORK\都灵建筑\Claude\Construction Stage Board` 内。未经用户明确指示，不得在此目录之外创建、修改或删除任何文件。
 
 ## 项目概述
 加拿大木结构住宅施工阶段看板。纯静态前端（HTML/CSS/JS），托管于 GitHub Pages，数据存储在 Firebase Realtime Database。
