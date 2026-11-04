@@ -134,6 +134,7 @@ const photoDialog = document.getElementById('photoDialog');
 const photoDialogImg = document.getElementById('photoDialogImg');
 
 let allData = {};
+let allWeeks = [];   // sorted week keys, populated via shallow load
 let currentWeek = null;
 let editingProjectId = null; // null = 新建
 let pendingPhotos = []; // dataURL 数组，编辑中的照片列表
@@ -156,17 +157,32 @@ let lastSaveTime = 0;
 let saveInFlight = false;
 let initialLoadOk = false; // 初始加载成功前禁止写入，避免用残缺本地数据覆盖云端
 
-async function loadData() {
+async function loadWeekList() {
   try {
-    const res = await fetch(DATA_URL, { cache: 'no-store' });
+    const res = await fetch(`${FIREBASE_URL}/board.json?shallow=true`, { cache: 'no-store' });
     if (!res.ok) throw new Error('加载失败');
     serverAvailable = true;
     const data = await res.json();
-    return data || {};
+    return data ? Object.keys(data).sort() : [];
   } catch (err) {
     serverAvailable = false;
-    console.error('加载失败:', err);
-    return {};
+    console.error('周列表加载失败:', err);
+    return [];
+  }
+}
+
+async function loadWeekData(week) {
+  try {
+    const res = await fetch(`${FIREBASE_URL}/board/${week}.json`, { cache: 'no-store' });
+    if (!res.ok) throw new Error('加载失败');
+    serverAvailable = true;
+    const data = await res.json();
+    const raw = data || [];
+    return Array.isArray(raw) ? raw : Object.values(raw);
+  } catch (err) {
+    serverAvailable = false;
+    console.error(`${week} 加载失败:`, err);
+    return null;
   }
 }
 
@@ -234,7 +250,7 @@ function renderAll() {
 
 function renderWeekSelect() {
   const thisWeek = getISOWeekKey(new Date());
-  const weeks = Object.keys(allData).sort();
+  const weeks = allWeeks;
   weekSelect.innerHTML = weeks.length
     ? weeks.map((w) => `<option value="${w}">${w}${w === thisWeek ? s('thisWeek') : ''}</option>`).join('')
     : `<option value="">${s('noData')}</option>`;
@@ -391,9 +407,15 @@ function buildPinCard(project) {
 }
 
 
-weekSelect.addEventListener('change', () => {
+weekSelect.addEventListener('change', async () => {
   const selected = weekSelect.value;
   currentWeek = selected || null;
+  if (currentWeek && !allData[currentWeek]) {
+    serverStatus.textContent = '…';
+    const data = await loadWeekData(currentWeek);
+    if (data !== null) allData[currentWeek] = data;
+    serverStatus.textContent = serverAvailable ? '' : s('offline');
+  }
   renderBoard();
 });
 
@@ -590,12 +612,12 @@ photoDialog.addEventListener('click', () => photoDialog.close());
 
 newWeekBtn.addEventListener('click', () => {
   const thisWeek = getISOWeekKey(new Date());
-  if (!allData[thisWeek]) {
-    const weeks = Object.keys(allData).sort();
-    const lastWeek = weeks[weeks.length - 1];
-    const base = lastWeek ? allData[lastWeek] : [];
+  if (!allWeeks.includes(thisWeek)) {
+    const lastWeek = allWeeks[allWeeks.length - 1];
+    const base = lastWeek ? (allData[lastWeek] || []) : [];
     // 复制上一周卡片结构作为本周起点，不带照片（避免数据膨胀）
     allData[thisWeek] = JSON.parse(JSON.stringify(base)).map((p) => ({ ...p, id: uid(), photos: [] }));
+    allWeeks = [...allWeeks, thisWeek].sort();
     currentWeek = thisWeek;
     saveData();
   } else {
@@ -614,8 +636,8 @@ deleteWeekBtn.addEventListener('click', () => {
   if (!confirm(_weekDelMsg)) return;
   const weekToDelete = currentWeek;
   delete allData[weekToDelete];
-  const weeks = Object.keys(allData).sort();
-  currentWeek = weeks[weeks.length - 1] || null;
+  allWeeks = allWeeks.filter((w) => w !== weekToDelete);
+  currentWeek = allWeeks[allWeeks.length - 1] || null;
   renderAll();
   deleteWeekFromFirebase(weekToDelete);
 });
@@ -652,6 +674,7 @@ importInput.addEventListener('change', () => {
         : `导入将覆盖以下周的数据：${weekList}，确定继续吗？\nImport will overwrite data for: ${weekList}. Continue?`;
       if (!confirm(_importMsg)) return;
       Object.assign(allData, imported);
+      allWeeks = [...new Set([...allWeeks, ...weeks])].sort();
       currentWeek = weeks[weeks.length - 1];
       renderAll();
       // 用 PATCH 只合并导入的周，不影响 Firebase 里其他周的数据
@@ -674,9 +697,8 @@ importInput.addEventListener('change', () => {
 const POLL_INTERVAL = 15000;
 
 function pickCurrentWeek() {
-  const weeks = Object.keys(allData).sort();
   const thisWeek = getISOWeekKey(new Date());
-  return allData[thisWeek] ? thisWeek : (weeks[weeks.length - 1] || null);
+  return allWeeks.includes(thisWeek) ? thisWeek : (allWeeks[allWeeks.length - 1] || null);
 }
 
 function dataChanged(fresh) {
@@ -701,27 +723,28 @@ function startPolling() {
     if (cardDialog.open || photoDialog.open) return;
     if (saveInFlight) return;
     if (Date.now() - lastSaveTime < 2000) return;
-    const fresh = await loadData();
-    if (!serverAvailable) return;
-    if (!dataChanged(fresh)) return;
-    // 拒绝用周数更少的数据覆盖当前状态（防止拉到写入前的旧快照）
-    if (Object.keys(fresh).length < Object.keys(allData).length) return;
-    // 拒绝覆盖当前正在查看的周（防止 Firebase 旧数据抹掉刚导入的内容）
-    if (currentWeek && allData[currentWeek] && !fresh[currentWeek]) return;
-    allData = fresh;
-    if (!currentWeek || !allData[currentWeek]) {
-      currentWeek = pickCurrentWeek();
-    }
-    renderAll();
+    if (!currentWeek) return;
+    const fresh = await loadWeekData(currentWeek);
+    if (!serverAvailable || fresh === null) return;
+    if (JSON.stringify(fresh) === JSON.stringify(allData[currentWeek] || [])) return;
+    allData[currentWeek] = fresh;
+    renderBoard();
   }, POLL_INTERVAL);
 }
 
 /* ---------- 初始化 ---------- */
 
 (async function init() {
-  allData = await loadData();
+  // Step 1: load week list only (shallow, tiny)
+  allWeeks = await loadWeekList();
   initialLoadOk = serverAvailable;
   currentWeek = pickCurrentWeek();
+
+  // Step 2: load current week's data
+  if (currentWeek) {
+    const data = await loadWeekData(currentWeek);
+    if (data !== null) allData[currentWeek] = data;
+  }
 
   if (!isAdmin) {
     newWeekBtn.style.display = 'none';
