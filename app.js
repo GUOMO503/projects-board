@@ -116,6 +116,8 @@ const deleteWeekBtn = document.getElementById('deleteWeekBtn');
 const exportBtn = document.getElementById('exportBtn');
 const importInput = document.getElementById('importInput');
 
+const isAdmin = new URLSearchParams(location.search).has('edit');
+
 const cardDialog = document.getElementById('cardDialog');
 const cardForm = document.getElementById('cardForm');
 const dialogTitle = document.getElementById('dialogTitle');
@@ -262,12 +264,14 @@ function renderBoard() {
       <span class="stage-number">${stage.id}</span>
       <span class="stage-title">${title}</span>
     `;
-    const addBtn = document.createElement('button');
-    addBtn.className = 'add-card-btn';
-    addBtn.textContent = s('addCard');
-    addBtn.disabled = !currentWeek;
-    addBtn.addEventListener('click', () => openCardDialog({ mode: 'add', stageId: stage.id }));
-    header.appendChild(addBtn);
+    if (isAdmin) {
+      const addBtn = document.createElement('button');
+      addBtn.className = 'add-card-btn';
+      addBtn.textContent = s('addCard');
+      addBtn.disabled = !currentWeek;
+      addBtn.addEventListener('click', () => openCardDialog({ mode: 'add', stageId: stage.id }));
+      header.appendChild(addBtn);
+    }
     card.appendChild(header);
 
     if (bullets.length) {
@@ -310,7 +314,7 @@ function renderBoard() {
 function buildPinCard(project) {
   const el = document.createElement('div');
   el.className = 'pin-card';
-  el.draggable = true;
+  el.draggable = isAdmin;
   el.dataset.id = project.id;
 
   const top = document.createElement('div');
@@ -325,12 +329,14 @@ function buildPinCard(project) {
   }
   top.appendChild(nameWrap);
 
-  const editBtn = document.createElement('button');
-  editBtn.className = 'pin-edit-btn';
-  editBtn.textContent = '✎';
-  editBtn.title = '编辑 Edit';
-  editBtn.addEventListener('click', () => openCardDialog({ mode: 'edit', project }));
-  top.appendChild(editBtn);
+  if (isAdmin) {
+    const editBtn = document.createElement('button');
+    editBtn.className = 'pin-edit-btn';
+    editBtn.textContent = '✎';
+    editBtn.title = '编辑 Edit';
+    editBtn.addEventListener('click', () => openCardDialog({ mode: 'edit', project }));
+    top.appendChild(editBtn);
+  }
 
   el.appendChild(top);
 
@@ -694,6 +700,15 @@ function startPolling() {
   allData = await loadData();
   initialLoadOk = serverAvailable;
   currentWeek = pickCurrentWeek();
+
+  if (!isAdmin) {
+    newWeekBtn.style.display = 'none';
+    deleteWeekBtn.style.display = 'none';
+    exportBtn.style.display = 'none';
+    const importLabel = document.getElementById('importLabel');
+    if (importLabel) importLabel.style.display = 'none';
+  }
+
   const langSelect = document.getElementById('langSelect');
   if (langSelect) {
     langSelect.addEventListener('change', () => {
