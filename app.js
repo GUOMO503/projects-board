@@ -264,6 +264,12 @@ function renderBoard() {
       <span class="stage-number">${stage.id}</span>
       <span class="stage-title">${title}</span>
     `;
+    const toggleBtn = document.createElement('button');
+    toggleBtn.className = 'stage-toggle';
+    toggleBtn.textContent = '▸';
+    toggleBtn.title = '展开/折叠 Expand/Collapse';
+    header.appendChild(toggleBtn);
+
     if (isAdmin) {
       const addBtn = document.createElement('button');
       addBtn.className = 'add-card-btn';
@@ -274,19 +280,35 @@ function renderBoard() {
     }
     card.appendChild(header);
 
+    const infoWrap = document.createElement('div');
+    infoWrap.className = 'stage-info';
+
     if (bullets.length) {
       const bulletsEl = document.createElement('div');
       bulletsEl.className = 'stage-bullets';
       bulletsEl.innerHTML = bullets.map((b) => `<span>● ${escapeHtml(b)}</span>`).join('');
-      card.appendChild(bulletsEl);
+      infoWrap.appendChild(bulletsEl);
     }
 
     if (desc) {
       const descEl = document.createElement('div');
       descEl.className = 'stage-desc';
       descEl.textContent = desc;
-      card.appendChild(descEl);
+      infoWrap.appendChild(descEl);
     }
+
+    const lsKey = `stageOpen_${stage.id}`;
+    if (localStorage.getItem(lsKey) === '1') {
+      infoWrap.classList.add('open');
+      toggleBtn.classList.add('open');
+    }
+    toggleBtn.addEventListener('click', () => {
+      const open = infoWrap.classList.toggle('open');
+      toggleBtn.classList.toggle('open', open);
+      try { localStorage.setItem(lsKey, open ? '1' : '0'); } catch (_) {}
+    });
+
+    card.appendChild(infoWrap);
 
 
     const list = document.createElement('div');

@@ -200,6 +200,30 @@ body {
   flex: 1;
 }
 
+.stage-toggle {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 11px;
+  padding: 2px 5px;
+  line-height: 1;
+  margin-left: 2px;
+  transition: transform 0.18s;
+  flex-shrink: 0;
+}
+.stage-toggle.open {
+  transform: rotate(90deg);
+}
+
+.stage-info {
+  display: none;
+  margin-bottom: 4px;
+}
+.stage-info.open {
+  display: block;
+}
+
 .stage-bullets {
   display: flex;
   flex-wrap: wrap;
