@@ -388,12 +388,12 @@ function buildPinCard(project) {
   if (project.photos && project.photos.length) {
     const photos = document.createElement('div');
     photos.className = 'pin-photos';
-    for (const src of project.photos) {
+    project.photos.forEach((src, idx) => {
       const img = document.createElement('img');
       img.src = src;
-      img.addEventListener('click', () => openPhotoDialog(src));
+      img.addEventListener('click', () => openPhotoDialog(project.photos, idx));
       photos.appendChild(img);
-    }
+    });
     el.appendChild(photos);
   }
 
@@ -602,11 +602,54 @@ cardForm.addEventListener('submit', (e) => {
 
 /* ---------- 照片大图 ---------- */
 
-function openPhotoDialog(src) {
-  photoDialogImg.src = src;
+const photoPrev = document.getElementById('photoPrev');
+const photoNext = document.getElementById('photoNext');
+const photoCounter = document.getElementById('photoCounter');
+let galleryList = [];
+let galleryIndex = 0;
+
+function showGalleryPhoto() {
+  photoDialogImg.src = galleryList[galleryIndex];
+  const multi = galleryList.length > 1;
+  photoPrev.hidden = !multi;
+  photoNext.hidden = !multi;
+  photoCounter.textContent = multi ? `${galleryIndex + 1} / ${galleryList.length}` : '';
+}
+
+function stepGallery(delta) {
+  if (galleryList.length < 2) return;
+  galleryIndex = (galleryIndex + delta + galleryList.length) % galleryList.length;
+  showGalleryPhoto();
+}
+
+function openPhotoDialog(list, index) {
+  galleryList = list;
+  galleryIndex = index;
+  showGalleryPhoto();
   photoDialog.showModal();
 }
+
 photoDialog.addEventListener('click', () => photoDialog.close());
+photoPrev.addEventListener('click', (e) => { e.stopPropagation(); stepGallery(-1); });
+photoNext.addEventListener('click', (e) => { e.stopPropagation(); stepGallery(1); });
+photoDialog.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowLeft') stepGallery(-1);
+  else if (e.key === 'ArrowRight') stepGallery(1);
+});
+
+let touchStartX = null;
+photoDialog.addEventListener('touchstart', (e) => {
+  touchStartX = e.touches.length === 1 ? e.touches[0].clientX : null;
+}, { passive: true });
+photoDialog.addEventListener('touchend', (e) => {
+  if (touchStartX === null) return;
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  touchStartX = null;
+  if (Math.abs(dx) > 50) {
+    e.preventDefault();
+    stepGallery(dx < 0 ? 1 : -1);
+  }
+});
 
 /* ---------- 周操作 ---------- */
 

@@ -428,6 +428,37 @@ dialog::backdrop {
   max-width: 90vw;
   background: transparent;
 }
+.photo-dialog { overflow: visible; }
+.photo-nav {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 64px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(0,0,0,0.45);
+  color: #fff;
+  font-size: 36px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+}
+.photo-nav:hover { background: rgba(0,0,0,0.7); }
+.photo-nav[hidden] { display: none; }
+.photo-prev { left: 12px; }
+.photo-next { right: 12px; }
+.photo-counter {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fff;
+  background: rgba(0,0,0,0.5);
+  padding: 3px 12px;
+  border-radius: 12px;
+  font-size: 13px;
+}
 .photo-dialog img {
   max-width: 85vw;
   max-height: 85vh;
