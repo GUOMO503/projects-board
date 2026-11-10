@@ -629,26 +629,91 @@ function openPhotoDialog(list, index) {
   photoDialog.showModal();
 }
 
-photoDialog.addEventListener('click', () => photoDialog.close());
-photoPrev.addEventListener('click', (e) => { e.stopPropagation(); stepGallery(-1); });
-photoNext.addEventListener('click', (e) => { e.stopPropagation(); stepGallery(1); });
+const MAX_ZOOM = 6;
+let zoom = { s: 1, x: 0, y: 0 };
+
+function applyZoom() {
+  photoDialogImg.style.transform = `translate(${zoom.x}px, ${zoom.y}px) scale(${zoom.s})`;
+  photoDialogImg.style.cursor = zoom.s > 1 ? 'grab' : 'zoom-in';
+}
+function resetZoom() {
+  zoom = { s: 1, x: 0, y: 0 };
+  applyZoom();
+}
+function setZoom(s) {
+  zoom.s = Math.min(MAX_ZOOM, Math.max(1, s));
+  if (zoom.s === 1) { zoom.x = 0; zoom.y = 0; }
+  applyZoom();
+}
+
+photoDialogImg.addEventListener('load', resetZoom);
+photoDialog.addEventListener('close', resetZoom);
+photoDialog.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  setZoom(zoom.s * (e.deltaY < 0 ? 1.15 : 1 / 1.15));
+}, { passive: false });
+photoDialogImg.addEventListener('dblclick', () => setZoom(zoom.s > 1 ? 1 : 2.5));
+
+photoPrev.addEventListener('click', () => stepGallery(-1));
+photoNext.addEventListener('click', () => stepGallery(1));
+document.getElementById('photoClose').addEventListener('click', () => photoDialog.close());
 photoDialog.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowLeft') stepGallery(-1);
   else if (e.key === 'ArrowRight') stepGallery(1);
 });
 
-let touchStartX = null;
-photoDialog.addEventListener('touchstart', (e) => {
-  touchStartX = e.touches.length === 1 ? e.touches[0].clientX : null;
-}, { passive: true });
-photoDialog.addEventListener('touchend', (e) => {
-  if (touchStartX === null) return;
-  const dx = e.changedTouches[0].clientX - touchStartX;
-  touchStartX = null;
-  if (Math.abs(dx) > 50) {
-    e.preventDefault();
-    stepGallery(dx < 0 ? 1 : -1);
+const pointers = new Map();
+let gesture = null;
+
+photoDialogImg.addEventListener('pointerdown', (e) => {
+  photoDialogImg.setPointerCapture(e.pointerId);
+  pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  gesture = {
+    startX: e.clientX, startY: e.clientY, moved: false,
+    startZoom: { ...zoom },
+    startDist: pointers.size === 2 ? pointerDist() : 0,
+  };
+  if (pointers.size === 2) gesture.moved = true;
+});
+photoDialogImg.addEventListener('pointermove', (e) => {
+  if (!pointers.has(e.pointerId) || !gesture) return;
+  pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (pointers.size === 2) {
+    if (!gesture.startDist) {
+      gesture.startDist = pointerDist();
+      gesture.startZoom = { ...zoom };
+    }
+    setZoom(gesture.startZoom.s * pointerDist() / gesture.startDist);
+  } else if (zoom.s > 1) {
+    const dx = e.clientX - gesture.startX, dy = e.clientY - gesture.startY;
+    if (Math.abs(dx) + Math.abs(dy) > 3) gesture.moved = true;
+    zoom.x = gesture.startZoom.x + dx;
+    zoom.y = gesture.startZoom.y + dy;
+    applyZoom();
   }
+});
+function endPointer(e) {
+  if (!pointers.has(e.pointerId)) return;
+  pointers.delete(e.pointerId);
+  if (gesture && pointers.size === 0 && zoom.s === 1 && e.type === 'pointerup') {
+    const dx = e.clientX - gesture.startX;
+    if (Math.abs(dx) > 50 && Math.abs(e.clientY - gesture.startY) < Math.abs(dx)) {
+      stepGallery(dx < 0 ? 1 : -1);
+    }
+  }
+  if (pointers.size === 0) gesture = null;
+  else gesture = { startX: 0, startY: 0, moved: true, startZoom: { ...zoom }, startDist: 0 };
+}
+photoDialogImg.addEventListener('pointerup', endPointer);
+photoDialogImg.addEventListener('pointercancel', endPointer);
+
+function pointerDist() {
+  const [a, b] = [...pointers.values()];
+  return Math.hypot(a.x - b.x, a.y - b.y) || 1;
+}
+
+photoDialog.addEventListener('click', (e) => {
+  if (e.target === photoDialog) photoDialog.close();
 });
 
 /* ---------- 周操作 ---------- */

@@ -425,10 +425,38 @@ dialog::backdrop {
 .dialog-actions .btn-danger { margin-right: auto; }
 
 .photo-dialog {
-  max-width: 90vw;
-  background: transparent;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  background: rgba(0,0,0,0.85);
+  overflow: hidden;
 }
-.photo-dialog { overflow: visible; }
+.photo-dialog[open] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.photo-dialog::backdrop { background: transparent; }
+.photo-close {
+  position: fixed;
+  top: 12px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 3;
+}
+.photo-close:hover { background: rgba(0,0,0,0.75); }
 .photo-nav {
   position: fixed;
   top: 50%;
@@ -460,8 +488,12 @@ dialog::backdrop {
   font-size: 13px;
 }
 .photo-dialog img {
-  max-width: 85vw;
-  max-height: 85vh;
+  max-width: 92vw;
+  max-height: 90vh;
   display: block;
   border-radius: 6px;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  transform-origin: center center;
 }
